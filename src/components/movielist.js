@@ -13,6 +13,7 @@ function MovieList() {
     const memoizedMovies = useMemo(() => {
         return movies;
     }, [movies]);
+    console.log(movies)
 
     useEffect(() => {
         dispatch(fetchMovies());
