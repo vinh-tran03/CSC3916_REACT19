@@ -13,7 +13,6 @@ function MovieList() {
     const memoizedMovies = useMemo(() => {
         return movies;
     }, [movies]);
-    console.log(movies)
     console.log('Movies:', memoizedMovies);
 
     useEffect(() => {
@@ -29,15 +28,15 @@ function MovieList() {
         dispatch(setMovie(movie));
     };
 
-    if (!memoizedMovies) { // Use memoizedMovies here
-        return <div>Loading....</div>;
-    }
+  if (!memoizedMovies || !Array.isArray(memoizedMovies)) { // Check if it's an array
+    return <div>Loading....</div>;
+  }
     console.log("r:",memoizedMovies); // Check if it's an array
 
 
     return (
         <Carousel onSelect={handleSelect} className="bg-dark text-light p-4 rounded">
-          {memoizedMovies.movies.map((movie) => (
+          {memoizedMovies.map((movie) => (
             <Carousel.Item key={movie._id}>
               {/* Use Nav.Link with "as={Link}" to avoid nested anchors */}
               <Nav.Link
