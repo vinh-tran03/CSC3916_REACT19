@@ -32,6 +32,8 @@ function MovieList() {
     if (!memoizedMovies) { // Use memoizedMovies here
         return <div>Loading....</div>;
     }
+    console.log("r:",r); // Check if it's an array
+
 
     return (
         <Carousel onSelect={handleSelect} className="bg-dark text-light p-4 rounded">
