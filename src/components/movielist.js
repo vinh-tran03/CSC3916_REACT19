@@ -32,7 +32,7 @@ function MovieList() {
     if (!memoizedMovies) { // Use memoizedMovies here
         return <div>Loading....</div>;
     }
-    console.log("r:",r); // Check if it's an array
+    console.log("r:",memoizedMovies); // Check if it's an array
 
 
     return (
