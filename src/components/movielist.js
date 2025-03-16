@@ -14,6 +14,7 @@ function MovieList() {
         return movies;
     }, [movies]);
     console.log(movies)
+    console.log('Movies:', memoizedMovies);
 
     useEffect(() => {
         dispatch(fetchMovies());
