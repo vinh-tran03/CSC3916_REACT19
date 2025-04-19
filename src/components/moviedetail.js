@@ -1,32 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { fetchMovie } from '../actions/movieActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, ListGroup, ListGroupItem, Image } from 'react-bootstrap';
 import { BsStarFill } from 'react-icons/bs';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams } from 'react-router-dom';
 
 const MovieDetail = () => {
   const dispatch = useDispatch();
-  const { movieId } = useParams(); // Get movieId from URL parameters
+  const { movieId } = useParams();
   const selectedMovie = useSelector(state => state.movie.selectedMovie);
   const loading = useSelector(state => state.movie.loading);
   const error = useSelector(state => state.movie.error);
-  const [reviewText, setReviewText] = useState('');
-  const [rating, setRating] = useState(0);
 
-  // Fetch the movie only when the movieId changes
+  // ⬇️ Refs for input fields
+  const reviewRef = useRef();
+  const ratingRef = useRef();
+
   useEffect(() => {
     dispatch(fetchMovie(movieId));
   }, [dispatch, movieId]);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+    const reviewText = reviewRef.current.value;
+    const ratingValue = parseFloat(ratingRef.current.value);
 
     const reviewData = {
       movieId,
-      username: localStorage.getItem('username'), 
+      username: localStorage.getItem('username'),
       review: reviewText,
-      rating: parseFloat(rating),
+      rating: ratingValue
     };
 
     try {
@@ -41,32 +44,22 @@ const MovieDetail = () => {
 
       if (!res.ok) throw new Error('Failed to submit review');
 
-      // Instead of fetching movie again, dispatch to update the reviews locally
-      dispatch({
-        type: 'ADD_REVIEW',
-        review: reviewData,
-      });
+      dispatch({ type: 'ADD_REVIEW', review: reviewData });
 
-      // Clear the review form fields
-      setReviewText('');
-      setRating(0);
+      dispatch(fetchMovie(movieId)); // Refresh movie details
+
+      // Clear inputs manually
+      reviewRef.current.value = '';
+      ratingRef.current.value = '';
     } catch (error) {
       console.error(error);
     }
   };
 
   const DetailInfo = () => {
-    if (loading) {
-      return <div>Loading....</div>;
-    }
-
-    if (error) {
-      return <div>Error: {error}</div>;
-    }
-
-    if (!selectedMovie) {
-      return <div>No movie data available.</div>;
-    }
+    if (loading) return <div>Loading....</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!selectedMovie) return <div>No movie data available.</div>;
 
     return (
       <Card className="bg-dark text-dark p-4 rounded">
@@ -84,27 +77,23 @@ const MovieDetail = () => {
             ))}
           </ListGroupItem>
           <ListGroupItem>
-            <h4>
-              <BsStarFill /> {selectedMovie.averageRating || 'N/A'}
-            </h4>
+            <h4><BsStarFill /> {selectedMovie.averageRating || "N/A"}</h4>
           </ListGroupItem>
         </ListGroup>
         <Card.Body className="text-light">
           {selectedMovie.reviews?.map((review, i) => (
             <p key={i}>
-              <b>{review.username}</b>&nbsp; {review.review} &nbsp; <BsStarFill />{' '}
-              {review.rating}
+              <b>{review.username}</b>&nbsp; {review.review} &nbsp; <BsStarFill /> {review.rating}
             </p>
           ))}
         </Card.Body>
         <Card.Body className="text-light">
           <h5>Leave a Review</h5>
-          <div className="mb-3">
+          <form onSubmit={handleSubmitReview}>
             <textarea
+              ref={reviewRef}
               className="form-control mb-2"
               rows={3}
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
               placeholder="Write your review..."
             />
             <input
@@ -112,16 +101,14 @@ const MovieDetail = () => {
               min="0"
               max="5"
               step="0.1"
+              ref={ratingRef}
               className="form-control mb-2"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
               placeholder="Rating (0 - 5)"
             />
-            {/* Prevent form submission from causing a jump */}
-            <button className="btn btn-primary" type="button" onClick={handleSubmitReview}>
+            <button type="submit" className="btn btn-primary">
               Submit Review
             </button>
-          </div>
+          </form>
         </Card.Body>
       </Card>
     );
