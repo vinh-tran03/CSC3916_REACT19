@@ -47,7 +47,7 @@ const MovieDetail = () => {
   useEffect(() => {
     dispatch({
       type: 'ADD_REVIEW',
-      review: { movieId, username, review: reviewText, rating: parseFloat(rating) }
+      review: { movieId, username: localStorage.getItem('username'), review: reviewText, rating: parseFloat(rating) }
     });
   }, [dispatch, movieId]);
 
