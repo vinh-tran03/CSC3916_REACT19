@@ -32,7 +32,7 @@ const MovieDetail = () => {
     console.log("Movie Reviews:", selectedMovie.reviews); // Log reviews to check
 
     return (
-      <Card className="bg-dark text-dark p-4 rounded">
+      <Card className="bg-dark text-light p-4 rounded">
         <Card.Header>Movie Detail</Card.Header>
         <Card.Body>
           <Image className="image" src={selectedMovie.imageUrl} thumbnail />
