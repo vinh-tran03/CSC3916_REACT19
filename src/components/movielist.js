@@ -8,6 +8,7 @@ import { BsStarFill } from 'react-icons/bs';
 function MovieList() {
     const dispatch = useDispatch();
     const movies = useSelector(state => state.movie.movies);
+    console.log("Movies in Redux state:", movies); // Log the Redux state
 
     // Memoize the movies array
     const memoizedMovies = useMemo(() => {
