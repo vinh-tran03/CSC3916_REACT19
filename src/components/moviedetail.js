@@ -92,6 +92,7 @@ const MovieDetail = () => {
         </Card.Body>
         <Card.Body className="text-light">
           <h5>Leave a Review</h5>
+        <div className="mb-3">
           <textarea
             className="form-control mb-2"
             rows={3}
@@ -112,6 +113,7 @@ const MovieDetail = () => {
           <button className="btn btn-primary" onClick={handleSubmitReview}>
             Submit Review
           </button>
+        </div>
         </Card.Body>
       </Card>
     );
