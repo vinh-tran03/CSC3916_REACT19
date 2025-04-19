@@ -32,7 +32,7 @@ const MovieDetail = () => {
     console.log("Movie Reviews:", selectedMovie.reviews); // Log reviews to check
 
     return (
-      <Card className="bg-dark text-light p-4 rounded">
+      <Card className="bg-dark text-dark p-4 rounded">
         <Card.Header>Movie Detail</Card.Header>
         <Card.Body>
           <Image className="image" src={selectedMovie.imageUrl} thumbnail />
@@ -52,7 +52,7 @@ const MovieDetail = () => {
             </h4>
           </ListGroupItem>
         </ListGroup>
-        <Card.Body>
+        <Card.Body className="text-light">
           {selectedMovie.reviews?.map((review, i) => (
             <p key={i}>
               <b>{review.username}</b>&nbsp; {review.review} &nbsp; <BsStarFill />{' '}
