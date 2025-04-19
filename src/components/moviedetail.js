@@ -12,7 +12,7 @@ const MovieDetail = () => {
   const loading = useSelector(state => state.movie.loading);
   const error = useSelector(state => state.movie.error);
 
-  // ⬇️ Refs for input fields
+  
   const reviewRef = useRef();
   const ratingRef = useRef();
 
