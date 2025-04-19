@@ -111,7 +111,7 @@ const MovieDetail = () => {
             onChange={(e) => setRating(e.target.value)}
             placeholder="Rating (0 - 5)"
           />
-          <button className="btn btn-primary" onClick={handleSubmitReview(e)}>
+          <button className="btn btn-primary" onClick={(e) => handleSubmitReview(e)}>
             Submit Review
           </button>
           </div>
