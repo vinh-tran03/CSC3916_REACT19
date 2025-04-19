@@ -14,7 +14,8 @@ const MovieDetail = () => {
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState(0);
 
-  const handleSubmitReview = async () => {
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
     const reviewData = {
       movieId,
       username: localStorage.getItem('username'), // or however you're storing it
@@ -92,7 +93,7 @@ const MovieDetail = () => {
         </Card.Body>
         <Card.Body className="text-light">
           <h5>Leave a Review</h5>
-        <div className="mb-3">
+          <div className="mb-3">
           <textarea
             className="form-control mb-2"
             rows={3}
@@ -110,10 +111,10 @@ const MovieDetail = () => {
             onChange={(e) => setRating(e.target.value)}
             placeholder="Rating (0 - 5)"
           />
-          <button className="btn btn-primary" onClick={handleSubmitReview}>
+          <button className="btn btn-primary" onClick={handleSubmitReview(e)}>
             Submit Review
           </button>
-        </div>
+          </div>
         </Card.Body>
       </Card>
     );
