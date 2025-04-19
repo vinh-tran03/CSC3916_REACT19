@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchMovie } from '../actions/movieActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, ListGroup, ListGroupItem, Image } from 'react-bootstrap';
@@ -11,8 +11,38 @@ const MovieDetail = () => {
   const selectedMovie = useSelector(state => state.movie.selectedMovie);
   const loading = useSelector(state => state.movie.loading); // Assuming you have a loading state in your reducer
   const error = useSelector(state => state.movie.error); // Assuming you have an error state in your reducer
+  const [reviewText, setReviewText] = useState('');
+  const [rating, setRating] = useState(0);
 
-
+  const handleSubmitReview = async () => {
+    const reviewData = {
+      movieId,
+      username: localStorage.getItem('username'), // or however you're storing it
+      review: reviewText,
+      rating: parseFloat(rating)
+    };
+  
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/review`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token'),
+        },
+        body: JSON.stringify(reviewData),
+      });
+  
+      if (!res.ok) throw new Error('Failed to submit review');
+  
+      // Re-fetch movie details to update reviews
+      dispatch(fetchMovie(movieId));
+      setReviewText('');
+      setRating(0);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   useEffect(() => {
     dispatch(fetchMovie(movieId));
   }, [dispatch, movieId]);
@@ -59,6 +89,29 @@ const MovieDetail = () => {
               {review.rating}
             </p>
           ))}
+        </Card.Body>
+        <Card.Body className="text-light">
+          <h5>Leave a Review</h5>
+          <textarea
+            className="form-control mb-2"
+            rows={3}
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            placeholder="Write your review..."
+          />
+          <input
+            type="number"
+            min="0"
+            max="5"
+            step="0.1"
+            className="form-control mb-2"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+            placeholder="Rating (0 - 5)"
+          />
+          <button className="btn btn-primary" onClick={handleSubmitReview}>
+            Submit Review
+          </button>
         </Card.Body>
       </Card>
     );
