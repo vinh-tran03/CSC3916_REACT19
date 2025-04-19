@@ -47,7 +47,7 @@ const MovieDetail = () => {
           </ListGroupItem>
           <ListGroupItem>
             <h4>
-              <BsStarFill /> {selectedMovie.avgRating}
+              <BsStarFill /> {selectedMovie.averageRating}
             </h4>
           </ListGroupItem>
         </ListGroup>
