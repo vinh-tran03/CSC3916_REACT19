@@ -34,6 +34,10 @@ const MovieDetail = () => {
       });
   
       if (!res.ok) throw new Error('Failed to submit review');
+      dispatch({
+        type: 'ADD_REVIEW',
+        review: reviewData
+      });  
   
       // Re-fetch movie details to update reviews
       dispatch(fetchMovie(movieId));
@@ -44,13 +48,6 @@ const MovieDetail = () => {
     }
   };
   
-  useEffect(() => {
-    dispatch({
-      type: 'ADD_REVIEW',
-      review: { movieId, username: localStorage.getItem('username'), review: reviewText, rating: parseFloat(rating) }
-    });
-  }, [dispatch, movieId]);
-
   const DetailInfo = () => {
     if (loading) {
       return <div>Loading....</div>;
