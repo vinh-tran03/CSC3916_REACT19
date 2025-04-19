@@ -9,20 +9,26 @@ const MovieDetail = () => {
   const dispatch = useDispatch();
   const { movieId } = useParams(); // Get movieId from URL parameters
   const selectedMovie = useSelector(state => state.movie.selectedMovie);
-  const loading = useSelector(state => state.movie.loading); // Assuming you have a loading state in your reducer
-  const error = useSelector(state => state.movie.error); // Assuming you have an error state in your reducer
+  const loading = useSelector(state => state.movie.loading);
+  const error = useSelector(state => state.movie.error);
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState(0);
 
+  // Fetch the movie only when the movieId changes
+  useEffect(() => {
+    dispatch(fetchMovie(movieId));
+  }, [dispatch, movieId]);
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+
     const reviewData = {
       movieId,
-      username: localStorage.getItem('username'), // or however you're storing it
+      username: localStorage.getItem('username'), 
       review: reviewText,
-      rating: parseFloat(rating)
+      rating: parseFloat(rating),
     };
-  
+
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/review`, {
         method: 'POST',
@@ -32,22 +38,23 @@ const MovieDetail = () => {
         },
         body: JSON.stringify(reviewData),
       });
-  
+
       if (!res.ok) throw new Error('Failed to submit review');
+
+      // Instead of fetching movie again, dispatch to update the reviews locally
       dispatch({
         type: 'ADD_REVIEW',
-        review: reviewData
-      });  
-  
-      // Re-fetch movie details to update reviews
-      // dispatch(fetchMovie(movieId));
+        review: reviewData,
+      });
+
+      // Clear the review form fields
       setReviewText('');
       setRating(0);
     } catch (error) {
       console.error(error);
     }
   };
-  
+
   const DetailInfo = () => {
     if (loading) {
       return <div>Loading....</div>;
@@ -60,7 +67,6 @@ const MovieDetail = () => {
     if (!selectedMovie) {
       return <div>No movie data available.</div>;
     }
-    console.log("Movie Reviews:", selectedMovie.reviews); // Log reviews to check
 
     return (
       <Card className="bg-dark text-dark p-4 rounded">
@@ -79,7 +85,7 @@ const MovieDetail = () => {
           </ListGroupItem>
           <ListGroupItem>
             <h4>
-              <BsStarFill /> {selectedMovie.averageRating || "N/A"}
+              <BsStarFill /> {selectedMovie.averageRating || 'N/A'}
             </h4>
           </ListGroupItem>
         </ListGroup>
@@ -94,26 +100,27 @@ const MovieDetail = () => {
         <Card.Body className="text-light">
           <h5>Leave a Review</h5>
           <div className="mb-3">
-          <textarea
-            className="form-control mb-2"
-            rows={3}
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            placeholder="Write your review..."
-          />
-          <input
-            type="number"
-            min="0"
-            max="5"
-            step="0.1"
-            className="form-control mb-2"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-            placeholder="Rating (0 - 5)"
-          />
-          <button className="btn btn-primary" onClick={(e) => handleSubmitReview(e)}>
-            Submit Review
-          </button>
+            <textarea
+              className="form-control mb-2"
+              rows={3}
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              placeholder="Write your review..."
+            />
+            <input
+              type="number"
+              min="0"
+              max="5"
+              step="0.1"
+              className="form-control mb-2"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              placeholder="Rating (0 - 5)"
+            />
+            {/* Prevent form submission from causing a jump */}
+            <button className="btn btn-primary" type="button" onClick={handleSubmitReview}>
+              Submit Review
+            </button>
           </div>
         </Card.Body>
       </Card>
@@ -122,6 +129,5 @@ const MovieDetail = () => {
 
   return <DetailInfo />;
 };
-
 
 export default MovieDetail;
