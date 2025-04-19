@@ -39,7 +39,7 @@ const MovieDetail = () => {
         <ListGroup>
           <ListGroupItem>{selectedMovie.title}</ListGroupItem>
           <ListGroupItem>
-            {selectedMovie.actors.map((actor, i) => (
+            {selectedMovie.actors?.map((actor, i) => (
               <p key={i}>
                 <b>{actor.actorName}</b> {actor.characterName}
               </p>
@@ -47,7 +47,7 @@ const MovieDetail = () => {
           </ListGroupItem>
           <ListGroupItem>
             <h4>
-              <BsStarFill /> {selectedMovie.averageRating}
+              <BsStarFill /> {selectedMovie.averageRating || "N/A"}
             </h4>
           </ListGroupItem>
         </ListGroup>
