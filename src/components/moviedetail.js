@@ -40,7 +40,7 @@ const MovieDetail = () => {
       });  
   
       // Re-fetch movie details to update reviews
-      dispatch(fetchMovie(movieId));
+      // dispatch(fetchMovie(movieId));
       setReviewText('');
       setRating(0);
     } catch (error) {
