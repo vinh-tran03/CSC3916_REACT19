@@ -29,6 +29,7 @@ const MovieDetail = () => {
     if (!selectedMovie) {
       return <div>No movie data available.</div>;
     }
+    console.log("Movie Reviews:", selectedMovie.reviews); // Log reviews to check
 
     return (
       <Card className="bg-dark text-dark p-4 rounded">
