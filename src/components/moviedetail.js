@@ -45,7 +45,10 @@ const MovieDetail = () => {
   };
   
   useEffect(() => {
-    dispatch(fetchMovie(movieId));
+    dispatch({
+      type: 'ADD_REVIEW',
+      review: { movieId, username, review: reviewText, rating: parseFloat(rating) }
+    });
   }, [dispatch, movieId]);
 
   const DetailInfo = () => {

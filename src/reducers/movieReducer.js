@@ -19,6 +19,14 @@ const movieReducer = (state = initialState, action) => {
             case constants.FETCH_MOVIE:
                   updated['selectedMovie'] = action.selectedMovie;
                   return updated;
+            case 'ADD_REVIEW':
+                  if (updated.selectedMovie && updated.selectedMovie._id === action.review.movieId) {
+                        updated.selectedMovie = {
+                        ...updated.selectedMovie,
+                        reviews: [...updated.selectedMovie.reviews, action.review]
+                        };
+                  }
+                  return updated;       
             default:
                   return state;
       }
